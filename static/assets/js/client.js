@@ -1,3 +1,4 @@
+import {getCookies} from "./utils";
 
 let socket = io();
 let domName = undefined;
@@ -8,17 +9,22 @@ socket.on("connect", () => {
     console.log("Client");
     console.log("id: ", getCookies().id);
     socket.emit("getSession", getCookies().id);
-})
+});
+
+
+
+
+
 
 socket.on("setName", (name) => {
     console.log("Nom reçu :", name);
     setName(name);
-})
+});
 
 socket.on("addMessage", (data) => {
     console.log("Données :", data);
     addMessage(data);
-})
+});
 
 function setData(data) {
     if (!domName)
@@ -26,15 +32,7 @@ function setData(data) {
     domName.textContent = data.username;
 }
 
-function getCookies() {
-    str = document.cookie.split('; ');
-    var result = {};
-    for (var i = 0; i < str.length; i++) {
-        var cur = str[i].split('=');
-        result[cur[0]] = cur[1];
-    }
-    return result;
-}
+
 
 function addMessage(data) {
     L.marker(data.pos).addTo(map);
@@ -46,12 +44,12 @@ function addMessage(data) {
     console.log(popup.getElement())
     popup.getElement().addEventListener("click", function () {
         popup.setContent(`<b>${data.username}</b>:<br/> ${data.message}`)
-    })
+    });
 
     popup.getElement().children[2].addEventListener("click", function () {
         console.log("closed");
         removeMessage(data);
-    })
+    });
     data.popup = popup;
     messages.push(data);
     updateMessage();

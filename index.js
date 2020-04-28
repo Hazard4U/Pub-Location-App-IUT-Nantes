@@ -8,7 +8,8 @@ const bodyParser = require("body-parser");
 const database = require('./app/config/dbconfig');
 
 const server = require("./app/model/server").getServer();
-const LogServeur = require("./utils").LogServeur
+const LogServeur = require("./utils").LogServeur;
+
 process.on('exit', function (code) {
     return console.log(`About to exit with code ${code}`);
 });

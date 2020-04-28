@@ -14,8 +14,7 @@
     <title>Chat</title>
 </head>
 <body>
-    <main>
-        <div id="mapid"></div>
+    <main id="app">
         <section>
             <h1>Chat de <span id="name">nom</span></h1>
             <div id="chat"></div>
@@ -25,9 +24,12 @@
                 <input type="submit" id="submit">
             </form>
         </section>
-            
+        <div id="mapid"></div>
     </main>
+    <script src="./assets/vendor/VueJS/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/assets/js/client.js"></script>
+    <script src="/static/assets/js/vue.js"></script>
 </body>
 </html>

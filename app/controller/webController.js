@@ -12,12 +12,12 @@ class WebController {
     }
 
     showChatPage(req, res) {
-        res.sendFile('chat.html', { root: this.root });
+        res.sendFile('page.html', { root: this.root });
     }
 
     login(req, res) {
         const ip = req.ip.slice(7);
-        LogServeur("[ INFO ] : Ip loged in " + ip)
+        LogServeur("[ INFO ] : Ip loged in " + ip);
 
         fetch(`https://api-adresse.data.gouv.fr/search/?q=${req.body.place}&autocomplete=0&limit=1`)
         .then( (fetchRes) => fetchRes.json())
