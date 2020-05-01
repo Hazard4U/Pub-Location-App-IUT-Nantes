@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,21 +15,22 @@
 </head>
 <body>
     <main id="app">
-        <section>
-            <h1>Chat de <span id="name">nom</span></h1>
-            <div id="chat"></div>
-            <form action="/message" method="POST">
-                <textarea id="text" type="text" rows="5" cols="30" maxlength="30">
-                </textarea>
-                <input type="submit" id="submit">
-            </form>
-        </section>
-        <div id="mapid"></div>
+<!--        <section>-->
+<!--            <h1>Chat de <span id="name">nom</span></h1>-->
+<!--            <div id="chat"></div>-->
+<!--            <form action="/message" method="POST">-->
+<!--                <textarea id="text" type="text" rows="5" cols="30" maxlength="30">-->
+<!--                </textarea>-->
+<!--                <input type="submit" id="submit">-->
+<!--            </form>-->
+<!--        </section>-->
+<!--        <div id="mapid"></div>-->
     </main>
     <script src="/static/assets/vendor/VueJS/vue.min.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/static/assets/js/client.js"></script>
-    <script src="/static/assets/js/vue.js"></script>
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-vue"></script>
+    <script type="module" src="/static/assets/js/client.js"></script>
+    <script type="module" src="/static/assets/screens/vuePage.js"></script>
 </body>
 </html>

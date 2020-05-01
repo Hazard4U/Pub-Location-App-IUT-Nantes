@@ -1,4 +1,4 @@
-import {getCookies} from "./utils";
+import {getCookies} from "../utils/tools.js";
 
 let socket = io();
 let domName = undefined;

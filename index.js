@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
     socket.on("getSession", (id) => {
         const userData = server.getData()[id];
         console.log(userData);
-        LogServeur("Id Connected "+id)
+        LogServeur("Id Connected "+id);
         socket.emit("setName", userData.username)
     })
 })
