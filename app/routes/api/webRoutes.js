@@ -8,12 +8,4 @@ router.get('/', function (req, res) {
     webController.showLoginPage(req, res);
 });
 
-router.get('/chat', function (req, res) {
-    webController.showChatPage(req, res);
-});
-
-router.post('/login', function (req, res) {
-    webController.login(req, res);
-});
-
 module.exports = router;

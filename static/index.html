@@ -7,30 +7,38 @@
             rel="stylesheet"
             href="https://unpkg.com/@trevoreyre/autocomplete-vue/dist/style.css"
     />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+            crossorigin=""></script>
+    <link rel="stylesheet" href="/static/assets/css/chat.css"/>
 </head>
 <body>
-    <h1>Connexion</h1>
     <main id="app">
-        <autocomplete
-                :search="search"
-                placeholder="Search for a country"
-                aria-label="Search for a country"
-                @submit="submit"
-        ></autocomplete>
-<!--        <form method="POST" action="/login">-->
-<!--            <label for="username">Nom d'utilisateur :</label>-->
-<!--            <input id="username" type="text" name="username">-->
-<!--            <label for="place">Où habitez-vous :</label>-->
-<!--            <input id="place" type="text" name="place">-->
-<!--            <input type="submit">-->
-<!--        </form>-->
+        <router-view />
     </main>
-    <div id="openweathermap-widget-11"></div>
-    <script src='//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/d3.min.js'></script><script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 11,cityid: '2990968',appid: '2f0fe5b16e0db94ac034c7187e94180b',units: 'metric',containerid: 'openweathermap-widget-11',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
+
+
+
+    <!-- Imports Vue.js-->
     <script src="/static/assets/vendor/VueJS/vue.min.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script src="https://unpkg.com/@trevoreyre/autocomplete-vue"></script>
-    <script type="module" src="/static/assets/screens/vueIndex.js"></script>
+
+    <!-- Imports Vue.js Component-->
+    <script type="text/javascript" src="https://unpkg.com/@trevoreyre/autocomplete-vue"></script>
+
+    <!-- Socket -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Api-->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDULNZVGex5jIEtmS1ClRfxxkukBw3qk4U&libraries=places"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="/static/assets/screens/vue.js"></script>
+    <script type="module" src="/static/assets/js/client.js"></script>
+
 </body>
 </html>

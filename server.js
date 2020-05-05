@@ -1,8 +1,12 @@
 const express = require("express");
+const  cookieParser = require('cookie-parser');
+
 const app = express();
+app.use(cookieParser());
+
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const port = process.argv[2] || 3000;
+const port = process.argv[2] || 3001;
 
 const bodyParser = require("body-parser");
 const database = require('./app/config/dbconfig');
@@ -31,7 +35,6 @@ database
 
         //accès aux pages statiques
         app.use('/static', express.static('static'));
-
     });
 
 io.on("connection", (socket) => {
@@ -39,9 +42,9 @@ io.on("connection", (socket) => {
         const userData = server.getData()[id];
         console.log(userData);
         LogServeur("Id Connected "+id);
-        socket.emit("setName", userData.username)
+        socket.emit("setSession", userData);
     })
-})
+});
 
 
 

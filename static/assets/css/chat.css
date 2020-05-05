@@ -37,8 +37,19 @@ main section form #submit{
     right: 10px;
 }
 
-main #mapid {
-  height: 100vh;
-  flex-basis: 75%;
+
+main .left{
+    display: flex;
+    flex-direction: column;
+    flex-basis: 50%;
+    height: 100vh;
+}
+
+main .left #mapid{
+    flex: 1;
+}
+
+main .left #mapid + div{
+    flex: 1;
 }
 
