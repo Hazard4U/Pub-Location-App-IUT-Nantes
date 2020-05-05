@@ -27,7 +27,6 @@ class BreweryController {
     };
 
     findInRadius(req, res){
-        console.log('test')
         let lat = req.query.lat;
         let long = req.query.long;
         let radius = req.query.radius;

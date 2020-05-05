@@ -12,7 +12,7 @@ class BreweryDAO {
     }
 
     findAll() {
-        const sqlRequest = "SELECT * FROM beer";
+        const sqlRequest = "SELECT * FROM brewery";
 
         return this.common.findAll(sqlRequest)
             .then(rows => {
@@ -31,49 +31,21 @@ class BreweryDAO {
     };
 
     findInRadius(lat,long,radius){
-        return new Promise((resolve,reject) => {
-            const fileName = './data/open-beer-database-breweries.csv';
-            const stream = fs.createReadStream(fileName, {encoding: 'utf8'});
-            let tabOfBreweryInRadius = []
+        // const request = "SELECT * FROM brewery";
+        return new Promise((resolve, reject) => {
+            const brew = this.findAll()
+                .then((breweries) => {
+                    const tabOfBreweryInRadius =  breweries.filter((brewery,index) => {
+                        let check = { 'latitude' : parseFloat(brewery.coordinates.split(',')[0]) , 'longitude' : parseFloat(brewery.coordinates.split(',')[1]) }
+                        let center = { 'latitude' : lat , 'longitude' : long }
+                        return geolib.isPointWithinRadius(check, center, radius)
+                    })
+                    resolve(tabOfBreweryInRadius);
+                })
+                .catch(err=> console.log(err));
 
-            const parser = parse({
-                delimiter: ';',
-                columns: header =>
-                    header.map( column => column.normalize('NFD').
-                    replace(/[\u0300-\u036f]/g, "").
-                    replace(/[^a-z0-9]/gmi, "_").
-                    replace(/\s+/g, '_').
-                    toLowerCase())
-            });
-
-            parser.on('readable', function () {
-                let row;
-
-                while (row = this.read()) {
-
-                    let check = { 'latitude' : parseFloat(row.coordinates.split(',')[0]) , 'longitude' : parseFloat(row.coordinates.split(',')[1]) }
-                    let center = { 'latitude' : lat , 'longitude' : long }
-                    console.log(check, center, radius)
-                    if (geolib.isPointWithinRadius(check, center, radius)){
-                        tabOfBreweryInRadius.push(row);
-                    }
-                }
-            });
-
-            stream.pipe(parser);
-
-            parser.on('finish', function ()  {
-                resolve(tabOfBreweryInRadius);
-            });
-
-            parser.on("error", (err) =>{
-                console.log(err);
-                reject(err);
-            });})
-
-
-    }
-
+        })
+    };
 }
 
 module.exports = BreweryDAO;

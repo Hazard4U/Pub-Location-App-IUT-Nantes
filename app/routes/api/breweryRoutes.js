@@ -9,7 +9,6 @@ router.get('/', function (req, res) {
 });
 
 router.get('/near', function (req, res) {
-    console.log('test-breweryRoute')
     breweryController.findInRadius(req, res)
 });
 
