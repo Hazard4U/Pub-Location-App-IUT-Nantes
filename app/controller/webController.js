@@ -1,11 +1,14 @@
 const server = require("../model/server").getServer();
-const LogServeur = require("../../utils").LogServeur;
 const getWeather = require("../api/api").getWeather;
 
 class WebController {
 
     constructor() {
         this.root = __dirname + "../../../static";
+    }
+
+    showLoginPage(req, res) {
+        res.sendFile('index.html', { root: this.root });
     }
 
     login(req, res) {

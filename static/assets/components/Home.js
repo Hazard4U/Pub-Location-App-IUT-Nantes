@@ -1,11 +1,6 @@
 import {autocomplete as placeApi} from "../utils/api.js";
 
 const Home  = {
-    data(){
-        return{
-            placeSearched: undefined
-        }
-    },
     template: `<autocomplete
                 :search="search"
                 placeholder="Search for a country"
@@ -17,8 +12,7 @@ const Home  = {
             return placeApi(input);
         },
         submit(input) {
-            this.d = input;
-            this.$router.push({path:'/main',query:{map:L}})
+            this.$router.push({path:'/main'})
         }
     }
 };

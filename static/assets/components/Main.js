@@ -2,6 +2,9 @@ let map = undefined;
 let messages = [];
 
 const Main = {
+    props:{
+      test: String
+    },
     data() {
         return {
             description: undefined,
@@ -41,6 +44,7 @@ const Main = {
                         </tr>
                         </tbody>
                     </table>
+                    <div>{{test}}</div>
                 </div>
             </div>
             <div class="right">
@@ -48,6 +52,8 @@ const Main = {
 `,
     methods: {},
     mounted() {
+        console.log(Main.$props)
+        console.log(this.$route.params);
         initMap(this.map);
     }
 };
