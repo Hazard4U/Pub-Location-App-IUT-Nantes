@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
     <title>Connexion</title>
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/@trevoreyre/autocomplete-vue/dist/style.css"
-    />
+
+    <link href="https://unpkg.com/@trevoreyre/autocomplete-vue/dist/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
           crossorigin=""/>
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <link rel="stylesheet" href="/static/assets/css/chat.css"/>
+
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
-    <link rel="stylesheet" href="/static/assets/css/chat.css"/>
 </head>
 <body>
     <main id="app">
-        <router-view />
+        <v-app>
+            <v-content>
+                <v-container fluid style="height: 100%; padding:0">
+                    <router-view />
+                </v-container>
+            </v-content>
+        </v-app>
     </main>
 
 
@@ -29,6 +38,7 @@
 
     <!-- Imports Vue.js Component-->
     <script type="text/javascript" src="https://unpkg.com/@trevoreyre/autocomplete-vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
     <!-- Socket -->
     <script src="/socket.io/socket.io.js"></script>

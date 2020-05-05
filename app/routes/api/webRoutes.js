@@ -8,4 +8,8 @@ router.get('/', function (req, res) {
     webController.showLoginPage(req, res);
 });
 
+router.get('/login', function (req, res) {
+    webController.login(req, res);
+});
+
 module.exports = router;

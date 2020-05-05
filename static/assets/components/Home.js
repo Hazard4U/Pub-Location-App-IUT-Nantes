@@ -3,8 +3,8 @@ import {autocomplete as placeApi} from "../utils/api.js";
 const Home  = {
     template: `<autocomplete
                 :search="search"
-                placeholder="Search for a country"
-                aria-label="Search for a country"
+                placeholder="Chercher une ville"
+                aria-label="Chercher une ville"
                 @submit="submit"
         ></autocomplete>`,
     methods: {
@@ -12,7 +12,7 @@ const Home  = {
             return placeApi(input);
         },
         submit(input) {
-            this.$router.push({path:'/main'})
+            this.$router.push({path:'/main',query:{search:input},params:{search2:input}})
         }
     }
 };

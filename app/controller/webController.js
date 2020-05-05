@@ -12,20 +12,22 @@ class WebController {
     }
 
     login(req, res) {
-        const params = req.body;
         let uid = req.cookies.id;
         if (uid == undefined){
             uid = Math.random();
             res.cookie('id', uid);
         }
-        let userData = {uid,search:params.search};
+        let userData = {uid,search:req.query.search};
         getWeather(userData.search).then(data=>{
             userData.weatherData = {...data};
             server.setData({ [uid]: userData});
-            res.redirect('/chat');
+            res.status(200);
+            res.json(userData);
         })
         .catch((error)=>{
             console.error(error);
+            res.status(404);
+            res.json(undefined);
         })
 
     }
