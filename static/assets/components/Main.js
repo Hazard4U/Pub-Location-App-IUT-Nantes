@@ -1,6 +1,6 @@
 import {socket} from "../js/client.js";
 import {getCookies, calcDate} from "../utils/tools.js";
-import {login as loginApi, nearestBreweries as nearestBreweriesApi} from "../utils/api.js";
+import {login as loginApi, nearestBreweries as nearestBreweriesApi, beerByBrewery as beerByBreweryApi} from "../utils/api.js";
 import {initMap, addBreweryPointOnMap} from "../utils/map.js";
 
 const Main = {
@@ -204,9 +204,7 @@ const Main = {
             return desc + description.charAt(0).toUpperCase() + description.slice(1);
         },
         setBeers: function(brewery){
-
-            fetch(`/api/beer/brewery/${brewery.id}`)
-                .then(res => res.json())
+            beerByBreweryApi(brewery.id)
                 .then(data=>{
                     console.log(data);
                     this.beers = data;
@@ -246,7 +244,7 @@ const Main = {
                     .then(data => {
                         this.breweries = data;
                         data.forEach(brewery => {
-                            addBreweryPointOnMap(brewery)
+                            addBreweryPointOnMap(brewery, this.setBeers)
                         });
                     })
             })
