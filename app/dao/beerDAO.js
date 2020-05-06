@@ -38,6 +38,17 @@ class BeerDAO {
             })
             .catch(err=> console.log(err));
     }
+
+    findByBrewery(breweryId){
+        const sqlRequest = "SELECT * FROM beer where brewery_id = $breweryId ";
+        let sqlParams = {$breweryId: breweryId};
+        return this.common.findAllWithParams(sqlRequest,sqlParams)
+            .then(rows => {
+                const beers = rows.map(row => new Beer(row));
+                return beers;
+            })
+            .catch(err=> console.log(err));
+    }
 }
 
 module.exports = BeerDAO;

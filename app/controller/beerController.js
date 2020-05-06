@@ -32,6 +32,12 @@ class BeerController {
             .catch(this.common.findError(res));
     }
 
+    findByBrewery(req, res){
+        let breweryid =  req.params.breweryid;
+        this.beerDAO.findByBrewery(breweryid)
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+    }
 }
 
 

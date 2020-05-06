@@ -1,11 +1,24 @@
-let map = undefined;
-let messages = [];
+import {socket} from "../js/client.js";
+import {getCookies, calcDate} from "../utils/tools.js";
+import {login as loginApi, nearestBreweries as nearestBreweriesApi} from "../utils/api.js";
+import {initMap, addBreweryPointOnMap} from "../utils/map.js";
 
 const Main = {
     data() {
         return {
             data: undefined,
-            breweries: undefined
+            dialogPhone: false,
+            dialogName: false,
+            phone: undefined,
+            breweryName: undefined,
+            breweries: [],
+            beers: [],
+            showBeers: false,
+            showChat: false,
+            title: "",
+            username: undefined,
+            messages: [],
+            msg: ""
         }
     },
     template: `
@@ -39,7 +52,7 @@ const Main = {
                       <v-list-item-icon>
                         <v-icon>mdi-send</v-icon>
                       </v-list-item-icon>
-                      <v-list-item-subtitle>{{this.data ? this.data.weatherData.wind.speed*3.6:""}} km/h</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{this.data ? (this.data.weatherData.wind.speed*3.6).toFixed(2):""}} km/h</v-list-item-subtitle>
                     </v-list-item>
                 
                     <v-list-item>
@@ -51,36 +64,114 @@ const Main = {
                 
                   </v-card>
             </v-col>
-            <v-col style="height: 100%"> 
-                <v-row>
-                    <v-card v-for="brewery in breweries" class="mx-auto" max-width="400">
-                        <v-card-title>{{brewery.breweries}}</v-card-title>
+            <v-col style="max-height: 100vh; padding: 10px;" class="d-flex flex-column align-center overflow-y-auto">
+                <div style="text-align: center">{{this.data ? this.title:""}}</div>
+                <v-btn v-if="showBeers && !showChat" color="orange" @click.stop="dialogName = true" style="margin: 5px 0 20px 0">Chatter</v-btn>
+                <v-row style="width:100%">
+                    <v-card v-if="!showBeers && !showChat" v-for="brewery in breweries" class="mx-auto d-flex flex-column" width="45%" max-height="200px" style="margin: 5px; padding: 5px">
+                        <v-card-title>{{(brewery.breweries).length >= 20 ? (brewery.breweries).slice(0,20)+"...":(brewery.breweries)}}</v-card-title>
                         <v-card-subtitle class="pb-0">{{brewery.address1}}</v-card-subtitle>
-                    
-                        <v-card-text class="text--primary">
-                            <v-icon color="indigo">mdi-phone</v-icon>
-                            <div>{{brewery.phone}}</div>
-                        </v-card-text>
-                    
                         <v-card-actions>
-                          <v-btn
-                            color="orange"
-                            text
-                          >
+                        <v-btn  style="text-align: left" color="orange" text @click.stop="dialogPhone = true; phone = brewery.phone; breweryName = brewery.breweries">
                             Téléphone
                           </v-btn>
-                    
-                          <v-btn
-                            color="orange"
-                            text
-                          >
+                          <v-btn style="text-align: left"  color="orange" text @click="window.open(brewery.website)">
                             Site
                           </v-btn>
                         </v-card-actions>
-                      </v-card>
+                        <v-row class="justify-center align-end">
+                            <v-btn dark color="blue" @click="setBeers(brewery)">
+                                Selectionner
+                            </v-btn>
+                        </v-row>
+                    </v-card>
+                    <v-card v-if="showBeers && !showChat" v-for="beer in beers" class="mx-auto d-flex flex-column" width="45%" height="158px" style="margin: 5px; padding: 5px">
+                        <v-card-title>{{(beer.name).length >= 20 ? (beer.name).slice(0,20)+"...":(beer.name)}}</v-card-title>
+                        <v-card-subtitle class="pb-0">{{beer.category}}</v-card-subtitle>
+                    </v-card>
+                    <v-card v-if="!showBeers && showChat" class="d-flex flex-column elevation-12" color="primary lighten-4" width="100%">
+                        <v-toolbar dark color="primary darken-1" style="max-height:70px">
+                            <v-toolbar-title>Chat</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-text style="min-height: 60%">
+                            <v-list ref="chat" id="messages" style="min-height: 100%">
+                                <template v-for="(item, index) in messages" class="d-flex flex-column">
+                                <v-row style="margin-left: 10px">
+                                    <v-chip v-if="item.username != undefined" class="ma-2" :color="item.color" text-color="white">
+                                            <v-avatar left>
+                                                <v-icon>mdi-account-circle</v-icon>
+                                            </v-avatar>
+                                            {{item.username}}: {{item.message}}
+                                    </v-chip>
+                                    <v-subheader v-if="item.username == undefined">{{item.message}}</v-subheader>
+                                </v-row>
+                                    
+                                </template>
+                            </v-list>
+                        </v-card-text>
+                        <v-card-actions >
+                            <v-form @submit.prevent="submit">
+                                <v-text-field v-model="msg" label="Message" single-line solo-inverted></v-text-field>
+                                <v-btn fab dark small color="primary" type="submit">
+                                    <v-icon dark style="font-size: 1em">send</v-icon>
+                                </v-btn>
+                            </v-form>
+                        </v-card-actions>
+                    </v-card>
+                    <div v-if="breweries.length == 0">
+                        <v-alert  type="info">
+                            Il n'y a peut être pas de brasserie dans ce coin, cherchez ailleurs !
+                        </v-alert>
+                    </div>
                 </v-row>
             </v-col>
+            <v-dialog v-model="dialogPhone" max-width="290" style="z-index:1000">
+              <v-card>
+                <v-card-title class="headline">Téléphone</v-card-title>
+                <v-card-subtitle class="pb-0" style="margin-bottom: 20px">{{breweryName}}</v-card-subtitle>
+                <v-card-text>
+                    <v-icon color="indigo">mdi-phone</v-icon> {{phone}}
+                </v-card-text>
+                 <v-spacer></v-spacer>
+                <v-card-actions>
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialogPhone = false"
+                  >
+                    Merci !
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogName" max-width="290" style="z-index:1000">
+              <v-card>
+                <v-card-title class="headline">Information...</v-card-title>
+                <v-card-subtitle class="pb-0" style="margin-bottom: 20px">Entre ton nom:</v-card-subtitle>
+                <v-card-text>
+                   <v-text-field label="Nom d'utilisateur*" v-model="username" required></v-text-field>
+                </v-card-text>
+                 <v-spacer></v-spacer>
+                <v-card-actions>
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialogName = false; joinChat()"
+                  >
+                    Rejoindre
+                  </v-btn>
+                  <v-btn
+                    color="red darken-1"
+                    text
+                    @click="dialogName = false;"
+                  >
+                    Abandonner
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
         </v-row>
+        
 `,
     methods: {
         weatherIcon: function () {
@@ -111,23 +202,51 @@ const Main = {
             }
             desc += tzDate.getHours()+":"+("0"+tzDate.getMinutes()).slice(-2)+", ";
             return desc + description.charAt(0).toUpperCase() + description.slice(1);
+        },
+        setBeers: function(brewery){
+
+            fetch(`/api/beer/brewery/${brewery.id}`)
+                .then(res => res.json())
+                .then(data=>{
+                    console.log(data);
+                    this.beers = data;
+                    this.showChat = false;
+                    this.showBeers = true;
+                    this.title = brewery.breweries;
+                })
+        },
+        joinChat: function(){
+            this.showChat = true;
+            this.showBeers = false;
+            this.messages = [];
+            socket.on("sendMessage", (data)=>{
+                this.messages.push(data);
+            });
+            socket.emit("joinChat",{room:this.title, name:this.username, id:getCookies().id});
+        },
+        submit() {
+            socket.emit("sendMessage",{id:getCookies().id, message:this.msg});
+            this.msg = "";
+        }
+    },
+    watch: {
+        messages() {
+            setTimeout(() => {
+                this.$refs.chat.$el.scrollTop = this.$refs.chat.$el.scrollHeight;
+            }, 0);
         }
     },
     created() {
-        fetch(`/login?search=${this.$route.query.search}`)
-            .then(res => res.json())
+        loginApi(this.$route.query.search)
             .then((data) => {
-                console.log(data);
                 this.data = data;
+                this.title = data.search;
                 initMap(data.weatherData.coord);
-
-                fetch(`/api/brewery/near?lat=${data.weatherData.coord.lat}&long=${data.weatherData.coord.lon}&radius=${20000}`)
-                    .then(res => res.json())
+                nearestBreweriesApi(data.weatherData.coord.lat,data.weatherData.coord.lon,20000)
                     .then(data => {
-                        console.log(data);
                         this.breweries = data;
                         data.forEach(brewery => {
-                            addBreweryPoint(brewery)
+                            addBreweryPointOnMap(brewery)
                         });
                     })
             })
@@ -135,72 +254,3 @@ const Main = {
 };
 export {Main};
 
-function addMessage(data) {
-    L.marker(data.pos).addTo(map);
-    const popup = L.popup({autoClose: false, offset: [0, -14]})
-        .setLatLng(data.pos)
-        .setContent(`Nouveau message de <b>${data.username}</b>`)
-        .openOn(map);
-
-    popup.getElement().addEventListener("click", function () {
-        popup.setContent(`<b>${data.username}</b>:<br/> ${data.message}`)
-    });
-
-    popup.getElement().children[2].addEventListener("click", function () {
-        removeMessage(data);
-    });
-    data.popup = popup;
-    messages.push(data);
-    updateMessage();
-}
-
-// pos = [lat,lon]
-function addBreweryPoint(brewery) {
-    const pos = brewery.coordinates.split(',');
-    var myIcon = L.icon({
-        iconUrl: '/static/assets/images/food-and-restaurant.svg',
-        iconSize: [38, 95],
-        iconAnchor: [22, 94],
-        popupAnchor: [-3, -76],
-        shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
-    });
-    L.marker(pos, {icon: myIcon, title: brewery.breweries}).addTo(map).on('click', (event) => {
-        //TODO event.latlng
-        console.log("Brasserie",event);
-    });
-}
-
-// data = {pos: [lat,lon], username: string, message: string}
-function removeMessage(data) {
-    // Pour une suppression correcte il faudrait rajouter la prise en compte d'une timestamp
-    const index = messages.findIndex((element) => {
-        return element.username == data.username && element.message == data.message
-    })
-    messages.splice(index, 1);
-    updateMessage();
-}
-
-function updateMessage() {
-    const popups = messages.map((message) => message.popup);
-    const group = new L.featureGroup(popups);
-    map.fitBounds(group.getBounds());
-}
-
-const initMap = (coord) => {
-    map = L.map('mapid').setView([coord.lat, coord.lon], 10);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/%22%3EOpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/%22%3ECC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/%22%3EMapbox</a>',
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoiaGF6YXJkNHUiLCJhIjoiY2p5ZGg0cnBtMHM5ajNta28xc3Y1ZWk4NiJ9.tNknm3zp2lIct3SQVxFiNg'
-    }).addTo(map);
-};
-
-// offset in houre
-function calcDate(offset) {
-    const d = new Date();
-    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    return new Date(utc + (3600000*offset));
-}

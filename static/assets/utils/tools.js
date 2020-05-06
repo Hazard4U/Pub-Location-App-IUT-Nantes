@@ -1,3 +1,4 @@
+//Récupère tous les cookies sous forme d'un objet key:value
 function getCookies() {
     const cookies = document.cookie.split('; ');
     let result = {};
@@ -8,25 +9,11 @@ function getCookies() {
     return result;
 }
 
-function addScript(src){
-    let script = document.createElement('script');
-    script.setAttribute('src',src);
-    document.head.appendChild(script);
+// offset en heure, permet de récupérer l'heure locale d'une timezone
+function calcDate(offset) {
+    const d = new Date();
+    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    return new Date(utc + (3600000*offset));
 }
 
-function redirectPost(url, data) {
-    var form = document.createElement('form');
-    document.body.appendChild(form);
-    form.method = 'post';
-    form.action = url;
-    for (var name in data) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = name;
-        input.value = data[name];
-        form.appendChild(input);
-    }
-    form.submit();
-}
-
-export {getCookies, redirectPost,addScript};
+export {getCookies,calcDate};

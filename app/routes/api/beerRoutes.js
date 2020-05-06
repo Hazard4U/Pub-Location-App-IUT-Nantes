@@ -16,5 +16,8 @@ router.get('/deg/:deg', function (req, res) {
     beerController.findByAlcoholOverDeg(req, res)
 });
 
+router.get('/brewery/:breweryid', function (req, res) {
+    beerController.findByBrewery(req, res)
+});
 
 module.exports = router;
