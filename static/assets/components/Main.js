@@ -5,7 +5,10 @@ const Main = {
     data() {
         return {
             data: undefined,
-            breweries: undefined
+            breweries: undefined,
+            weatherDescript: undefined,
+            labels:undefined,
+            time: 0
         }
     },
     template: `
@@ -16,7 +19,7 @@ const Main = {
                     <v-list-item two-line>
                       <v-list-item-content>
                         <v-list-item-title class="headline">{{this.data ? this.data.weatherData.name:""}}</v-list-item-title>
-                        <v-list-item-subtitle>{{this.data ? weatherDesc(this.data.weatherData):""}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{this.data ? this.weatherDescript:""}}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                 
@@ -48,6 +51,14 @@ const Main = {
                       </v-list-item-icon>
                       <v-list-item-subtitle>{{this.data ? this.data.weatherData.main.humidity:""}}%</v-list-item-subtitle>
                     </v-list-item>
+                    
+                     <v-slider
+                          v-model="time"
+                          :max="6"
+                          :tick-labels="labels"
+                          class="mx-4"
+                          ticks
+                        ></v-slider>
                 
                   </v-card>
             </v-col>
@@ -94,23 +105,41 @@ const Main = {
             const description = weatherData.weather[0].description;
             const tzDate = calcDate(timezone/60/60);
             let desc = "";
+            let tabDesc = []
             switch (tzDate.getDay()) {
-                case 1: desc+= "Lundi, ";
+                case 1:
+                    desc+= "Lundi, ";
+                    tabDesc = ["LUN","MAR","MER","JEU","VEN","SAM","DIM"];
                     break;
-                case 2: desc+= "Mardi, ";
+                case 2:
+                    desc+= "Mardi, ";
+                    tabDesc = ["MAR","MER","JEU","VEN","SAM","DIM","LUN"];
                     break;
-                case 3: desc+= "Mercredi, ";
+                case 3:
+                    desc+= "Mercredi, ";
+                    tabDesc = ["MER","JEU","VEN","SAM","DIM","LUN","MAR"];
                     break;
-                case 4: desc += "Jeudi, ";
+                case 4:
+                    desc += "Jeudi, ";
+                    tabDesc = ["JEU","VEN","SAM","DIM","LUN","MAR","MER"];
                     break;
-                case 5: desc += "Vendredi, ";
+                case 5:
+                    desc += "Vendredi, ";
+                    tabDesc = ["VEN","SAM","DIM","LUN","MAR","MER","JEU"];
                     break;
-                case 6: desc += "Samedi, ";
+                case 6:
+                    desc += "Samedi, ";
+                    tabDesc = ["SAM","DIM","LUN","MAR","MER","JEU","VEN"];
                     break;
-                default: desc += "Dimanche, ";
+                default:
+                    desc += "Dimanche, ";
+                    tabDesc = ["DIM","LUN","MAR","MER","JEU","VEN","SAM"];
             }
             desc += tzDate.getHours()+":"+("0"+tzDate.getMinutes()).slice(-2)+", ";
-            return desc + description.charAt(0).toUpperCase() + description.slice(1);
+            // tabDesc.push(desc + description.charAt(0).toUpperCase() + description.slice(1))
+            // tabDesc.push(tzDate.getDay())
+            let tabfin = [desc + description.charAt(0).toUpperCase() + description.slice(1), tabDesc]
+            return tabfin;
         }
     },
     created() {
@@ -120,6 +149,9 @@ const Main = {
                 console.log(data);
                 this.data = data;
                 initMap(data.weatherData.coord);
+                const weatherTemp = this.weatherDesc(data.weatherData);
+                this.weatherDescript = weatherTemp[0];
+                this.labels = weatherTemp[1];
 
                 fetch(`/api/brewery/near?lat=${data.weatherData.coord.lat}&long=${data.weatherData.coord.lon}&radius=${20000}`)
                     .then(res => res.json())
