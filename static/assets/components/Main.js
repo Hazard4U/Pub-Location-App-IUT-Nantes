@@ -52,6 +52,33 @@ const Main = {
                   </v-card>
             </v-col>
             <v-col style="height: 100%"> 
+                <v-row>
+                    <v-card v-for="brewery in breweries" class="mx-auto" max-width="400">
+                        <v-card-title>{{brewery.breweries}}</v-card-title>
+                        <v-card-subtitle class="pb-0">{{brewery.address1}}</v-card-subtitle>
+                    
+                        <v-card-text class="text--primary">
+                            <v-icon color="indigo">mdi-phone</v-icon>
+                            <div>{{brewery.phone}}</div>
+                        </v-card-text>
+                    
+                        <v-card-actions>
+                          <v-btn
+                            color="orange"
+                            text
+                          >
+                            Téléphone
+                          </v-btn>
+                    
+                          <v-btn
+                            color="orange"
+                            text
+                          >
+                            Site
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                </v-row>
             </v-col>
         </v-row>
 `,
@@ -83,8 +110,7 @@ const Main = {
                 default: desc += "Dimanche, ";
             }
             desc += tzDate.getHours()+":"+("0"+tzDate.getMinutes()).slice(-2)+", ";
-            let test = " fsdf";
-            return description.charAt(0).toUpperCase() + description.slice(1);
+            return desc + description.charAt(0).toUpperCase() + description.slice(1);
         }
     },
     created() {
@@ -95,7 +121,7 @@ const Main = {
                 this.data = data;
                 initMap(data.weatherData.coord);
 
-                fetch(`/api/brewery/near?lat=${data.weatherData.coord.lat}&long=${data.weatherData.coord.lon}&radius=${50000}`)
+                fetch(`/api/brewery/near?lat=${data.weatherData.coord.lat}&long=${data.weatherData.coord.lon}&radius=${20000}`)
                     .then(res => res.json())
                     .then(data => {
                         console.log(data);
@@ -141,7 +167,7 @@ function addBreweryPoint(brewery) {
     });
     L.marker(pos, {icon: myIcon, title: brewery.breweries}).addTo(map).on('click', (event) => {
         //TODO event.latlng
-        console.log(event.latlng);
+        console.log("Brasserie",event);
     });
 }
 
@@ -173,7 +199,7 @@ const initMap = (coord) => {
 };
 
 // offset in houre
-function calcDate(city, offset) {
+function calcDate(offset) {
     const d = new Date();
     const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     return new Date(utc + (3600000*offset));
