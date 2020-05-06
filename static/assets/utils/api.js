@@ -48,4 +48,17 @@ const nearestBreweries = (lat,long,radius) => {
     });
 }
 
-export {autocomplete,login,nearestBreweries};
+/*
+Récupère toutes les bières d'une brasserie
+*/
+const beerByBrewery = (breweryId) => {
+    return new Promise(resolve => {
+        fetch(`/api/beer/brewery/${breweryId}`)
+            .then(res =>res.json())
+            .then(data => {
+                resolve(data);
+            })
+    });
+}
+
+export {autocomplete,login,nearestBreweries,beerByBrewery};

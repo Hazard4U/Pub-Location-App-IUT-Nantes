@@ -2,7 +2,7 @@
 let _MAP = undefined;
 
 // pos = [lat,lon]
-function addBreweryPointOnMap(brewery) {
+function addBreweryPointOnMap(brewery, breweryClickCallBack) {
     const pos = brewery.coordinates.split(',');
     var myIcon = L.icon({
         iconUrl: '/static/assets/images/food-and-restaurant.svg',
@@ -12,12 +12,28 @@ function addBreweryPointOnMap(brewery) {
         shadowSize: [68, 95],
         shadowAnchor: [22, 94]
     });
-    L.marker(pos, {icon: myIcon, title: brewery.breweries}).addTo(_MAP).on('click', (event) => {
-        //TODO event.latlng
+    const marker = L.marker(pos, {icon: myIcon, title: brewery.breweries}).addTo(_MAP)
+        marker.on('click', (event) => {
+        breweryClickCallBack(brewery);
         console.log("Brasserie",event);
     });
+    marker.on('mouseover', (event) => {
+        addPopUpBrewery(brewery,marker);
+        console.log("Brasserie",event);
+    });
+
 }
 
+function addPopUpBrewery(brewery,marker){
+    marker.bindPopup(brewery.breweries).openPopup();
+    const popup = marker.getPopup();
+
+    marker.on('mouseleave', (event) => {
+        console.log("loged")
+        popup.remove();
+    });
+}
+// Fonction qui permettait d'afficher un message d'un utilisateur sur la map
 function addMessageOnMap(data) {
     L.marker(data.pos).addTo(_MAP);
     const popup = L.popup({autoClose: false, offset: [0, -14]})

@@ -1,12 +1,17 @@
 import {autocomplete as placeApi} from "../utils/api.js";
 
 const Home  = {
-    template: `<autocomplete
-                :search="search"
-                placeholder="Chercher une ville"
-                aria-label="Chercher une ville"
-                @submit="submit"
-        ></autocomplete>`,
+    template: `
+        <div id="background">
+            <div>
+                <autocomplete
+                        :search="search"
+                        placeholder="Chercher une ville"
+                        aria-label="Chercher une ville"
+                        @submit="submit"
+                ></autocomplete>
+            </div>
+        </div>`,
     methods: {
         search(input) {
             return placeApi(input);
