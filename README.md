@@ -1,31 +1,33 @@
 # beerIUT
- ![](https://img.shields.io/github/node/pandao/editor.md.svg)
+ ![npm](https://img.shields.io/npm/v/npm)
+ ![node](https://img.shields.io/badge/node-12.16.3-brightgreen)
+ ![ubuntu](https://img.shields.io/badge/ubuntu-18.04-red)
+
+ 
+ 
 Projet final dans le cadre des matières "Technologies pour la production de logiciels"(m4105C) et "Programmation web client riche"(m4103C).
 Ce projet a pour objectif de rassembler les connaissances acquises dans le cadre de ces matières en Javascript côté serveur avec NodeJS pour la première
 et avec le framework Vue côté client pour la seconde.
 
 ---
-## Requirements
-
-For development, you will only need Node.js and a node global package, Yarn, installed in your environement.
 
 ### Node
-- #### Node installation on Windows
+- #### Node installation sur Windows
 
-  Just go on [official Node.js website](https://nodejs.org/) and download the installer.
-Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
+  Il suffit d'aller sur le site officiel Node.js (https://nodejs.org/) et de télécharger l'installateur.
+  Assurez-vous également que "git" est disponible dans votre PATH, "npm" pourrait en avoir besoin (vous pouvez trouver git [ici](https://git-scm.com/)).
 
-- #### Node installation on Ubuntu
+- #### Node installation sur Ubuntu
 
-  You can install nodejs and npm easily with apt install, just run the following commands.
+  Vous pouvez installer facilement les nodejs et npm avec apt install, il suffit d'exécuter les commandes suivantes.
 
       $ sudo apt install nodejs
       $ sudo apt install npm
 
-- #### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
+- #### Autres OS
+  Vous pouvez trouver plus d'informations sur l'installation sur le site officiel Node.js (https://nodejs.org/) et le site officiel NPM (https://npmjs.org/).
 
-If the installation was successful, you should be able to run the following command.
+Si l'installation a réussi, vous devriez être en mesure d'exécuter la commande suivante.
 
     $ node --version
     v8.11.3
@@ -33,39 +35,74 @@ If the installation was successful, you should be able to run the following comm
     $ npm --version
     6.1.0
 
-If you need to update `npm`, you can make it using `npm`! Cool right? After running the following command, just open again the command line and be happy.
+Si vous avez besoin de mettre à jour `npm`, vous pouvez le faire en utilisant `npm` ! C'est cool, non ? Après avoir exécuté la commande suivante, il suffit d'ouvrir à nouveau la ligne de commande et d'être content.
+    
+    $ npm install npm@latest -g
 
-    $ npm install npm -g
-
-###
-### Yarn installation
-  After installing node, this project will need yarn too, so just run the following command.
-
-      $ npm install -g yarn
 
 ---
 
-## Install
+## Installation
+- ### Projet
 
-    $ git clone https://github.com/YOUR_USERNAME/PROJECT_TITLE
-    $ cd PROJECT_TITLE
-    $ yarn install
+```shell script
+    $ git clone https://gitlab.com/Hazard4U/beeriut.git
+    $ cd beerIUT
+    $ npm install
+```
+    
+- ### Extension navigateur internet
 
-## Configure app
+Afin de pouvoir requêter l'API de Google en étant en localhost (CORS issue) nous avons trouver le moyen de faire fonctionner 
+le requêtage en passant par l'installation d'une extension sur le navigateur.
 
-Open `a/nice/path/to/a.file` then edit it with your settings. You will need:
+1. #### Pour Google Chrome : 
+    "Allow CORS" ==> extension présente dans le Chome Web Store disponible [ici](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=fr)
+2. #### Pour Firefox : 
+    "CORS Everywhere" ==> extension présente sur addons.mozilla.org disponible [là](https://addons.mozilla.org/fr/firefox/addon/cors-everywhere/?src=search)
 
-- A setting;
-- Another setting;
-- One more setting;
+## Configurer l'application
+Si vous désirez changer le port par défaut (i.e "3000") 
 
-## Running the project
+Ouvrez `beerIUT/server.js` et éditez la ligne suivante en remplaçant la dernière valeur par le port désiré. 
 
-    $ yarn start
+```javascript
+const port = process.argv[2] || 3000;
+```
 
-## Simple build for production
+## Lancer l'application
 
-    $ yarn build
+    $ node server.js
+
+Puis connectez-vous sur `http://localhost:3000/` sous réserve que vous ayez laisser le port par défaut, 
+sinon référez vous au paragraghe précédent.
+
+## Requêter l'API
+
+- ### API beerRoutes
+    
+    |  Methode  |          URL             | Description                                               |
+    |:----------|:-------------------------| :---------------------------------------------------------|
+    | GET       | /api/beerRoutes/         | Récupérer toutes les bières                               |
+    |           | /api/beerRoutes/:id      | Récupérer une bière par identifiant unique                |
+    |           | /api/beerRoutes/deg/:deg | Récupérer les bières par degré d'alcool égal ou supérieur |
+    
+- ### API breweryRoutes
+    
+    |  Methode  |          URL                | Description                     |
+    |:----------|:----------------------------| :-------------------------------|
+    | GET       | /api/breweryRoutes/         | Récupérer toutes les brasseries |
+    |           | /api/breweryRoutes/:id      | Récupérer une brasserie par identifiant unique |
+    |           | /api/beerRoutes/near?lat=`{lat}`&long=`{long}`&radius=`{radius}` | Récupérer les brasseries présentes dans un rayon défini avec {lat} ==> la latitude, {long} ==> la longitude et {rad} ==> le rayon désiré |
+
+- ### API webRoutes
+    
+    |  Methode  |            URL          | Description                   |
+    |:----------|:------------------------| :-----------------------------|
+    | GET       | /api/webRoutes/         | Fournit le fichier index.html |
+    |           | /api/webRoutes/login?search=`{adresse}`      | Renvoie les données de connexion cliente après avoir précisé une ville à la place de la variable {adresse} |
+    
+
 
 
 

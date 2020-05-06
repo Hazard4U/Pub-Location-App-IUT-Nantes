@@ -6,7 +6,7 @@ app.use(cookieParser());
 
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const port = process.argv[2] || 3000;
+const port = process.argv[2] || 3000; // Si vous souhaitez changer de port veuillez modifier l'entier en fin de ligne pour choisir le votre
 
 const bodyParser = require("body-parser");
 const database = require('./app/config/dbconfig');
