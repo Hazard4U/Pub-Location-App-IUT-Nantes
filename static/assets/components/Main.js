@@ -101,7 +101,7 @@ const Main = {
                                             <v-avatar left>
                                                 <v-icon>mdi-account-circle</v-icon>
                                             </v-avatar>
-                                            {{item.username}}: {{item.message}}
+                                            <span><b>{{item.username}}:</b>  {{item.message}}</span>
                                     </v-chip>
                                     <v-subheader v-if="item.username == undefined">{{item.message}}</v-subheader>
                                 </v-row>
