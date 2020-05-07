@@ -45,31 +45,37 @@ io.on("connection", (socket) => {
         socket.emit("setSession", userData);
     });
     socket.on("joinChat", (data) => {
+        console.log("Join ",data)
         const userData = server.getData()[data.id];
         const actualUserRoom = userData.room;
-        if (actualUserRoom)
+        if (actualUserRoom) {
             socket.leave(actualUserRoom, ()=>{
-            io.to(actualUserRoom).emit('sendMessage', {username: undefined, message:data.name+" a quitté le chat !"});
-        });
+                io.to(actualUserRoom).emit('sendMessage', {username: undefined, message:data.name+" a quitté le chat !"});
+                joinChat(socket,userData, data);
+            });
+            return
+        }
 
-        socket.join(data.room, ()=>{
-            server.setData(
-                {[data.id]: {
-                    ...userData,
-                    room:data.room,
-                    name:data.name,
-                    color: '#'+Math.floor(Math.random()*16777215).toString(16)}
-                }
-            );
-            io.to(data.room).emit('sendMessage', {username: undefined, message:data.name+" a rejoint le chat !"});
-        });
+        joinChat(socket, userData, data);
     })
     socket.on("sendMessage", (data) => {
+        console.log("Message ",data)
         const userData = server.getData()[data.id];
         const actualUserRoom = userData.room;
         io.to(actualUserRoom).emit('sendMessage', {message:data.message, username: userData.name, color: userData.color});
     })
 });
 
-
-
+const joinChat = (socket,userData, newData) => {
+    socket.join(newData.room, ()=>{
+        server.setData(
+            {[newData.id]: {
+                    ...userData,
+                    room:newData.room,
+                    name:newData.name,
+                    color: '#'+Math.floor(Math.random()*16777215).toString(16)}
+            }
+        );
+        io.to(newData.room).emit('sendMessage', {username: undefined, message:newData.name+" a rejoint le chat !"});
+    });
+}
