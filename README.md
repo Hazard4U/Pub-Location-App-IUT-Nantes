@@ -120,18 +120,29 @@ Ce petit système peut se voir côté client avec les couleurs de chat pour les 
     |           | /api/breweryRoutes/:id      | Récupérer une brasserie par identifiant unique |
     |           | /api/beerRoutes/near?lat=`{lat}`&long=`{long}`&radius=`{radius}` | Récupérer les brasseries présentes dans un rayon défini avec {lat} ==> la latitude, {long} ==> la longitude et {rad} ==> le rayon désiré |
     
-    **error answer code** : {"errorCode":21,"message":"Entity not found"}
+    - **/api/breweryRoutes/:id**
     
-    **success answer code** : {"id":100,"breweries":"Bell's Brewery Inc.","address1":"8938 Krum Ave.","address2":"","city":"Galesburg","state":"Michigan","code":"49053","country":"United States","phone":"269.382.2338","website":"...","filepath":"","descript":"In ...","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"42.2843,-85.4538"}
+    ***error answer code*** : {"errorCode":21,"message":"Entity not found"}
     
-- ### API webRoutes
+    ***success answer code*** : {"id":100,"breweries":"Bell's Brewery Inc.","address1":"8938 Krum Ave.","address2":"","city":"Galesburg","state":"Michigan","code":"49053","country":"United States","phone":"269.382.2338","website":"...","filepath":"","descript":"In ...","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"42.2843,-85.4538"}
+    
+    - **/api/breweryRoutes/near**
+    
+    ***error answer code*** (position définie sur Nantes) : [] //Ce retour est volontaire afin de pouvoir gérer nos traitements internes
+    
+    ***success answer code*** (rayon de 5000m sur Londres) : [{"id":563,"breweries":"Fuller, Smith & Turner PBC","address1":"Chiswick Lane South","address2":"","city":"London","state":"London","code":"","country":"United Kingdom","phone":"44-(0208)-996-2000","website":"http://www.fullers.co.uk/","filepath":"","descript":"","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"51.4877,-0.2498"},{"id":1385,"breweries":"Youngs & Company Brewery","address1":"26 Osiers Road","address2":"Wandsworth","city":"London","state":"","code":"SW18 1NH","country":"England","phone":"020 8875 7000","website":"http://www.youngs.co.uk","filepath":"","descript":"","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"51.4611,-0.1966"}]
+    
+- #### API webRoutes
     
     |  Methode  |            URL          | Description                   |
     |:----------|:------------------------| :-----------------------------|
     | GET       | /api/webRoutes/         | Fournit le fichier index.html |
     |           | /api/webRoutes/login?search=`{adresse}`      | Renvoie les données de connexion cliente après avoir précisé une ville à la place de la variable {adresse} |
     
-
+    
+ - #### Test des routes
+ Comme demandé, un fichier `test.sh` est à disposition afin de pouvoir tester les routes sur l'API.
+   
 ###2. Partie Sockets
 Le client établit la connexion avec le serveur au chargement de l'index.html.<br>
 Lorsque le client sélectionne une brasserie il déclenche l'évènement: "joinChat", intercepté par le serveur qui le fait rejoindre une room.<br>
