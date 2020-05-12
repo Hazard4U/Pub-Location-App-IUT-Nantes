@@ -77,6 +77,29 @@ const port = process.argv[2] || 3000;
 Puis connectez-vous sur `http://localhost:3000/` sous réserve que vous ayez laisser le port par défaut, 
 sinon référez vous au paragraghe précédent.
 
+## Présentation des choix technologiques et des fonctionnalité implémentées
+Nous avons fait le choix d'implémenter Vue.JS, pour répondre aux attentes du cours de client riche, où l'utilisation d'un framework était demandé.
+
+Cette implémentation nous a demandé de "refacto" notre projet pour passer d'un routage des pages web côté serveur au côté client. Ce qui permet à notre serveur de servir au client uniquement une seule page "index.html" où Vue intègre un routeur qui sert la page d'accueil ou la page d'information au besoin.
+
+Pour faciliter, accélérer le développement avec Vue nous avons intégré au projet, Vuetify.
+
+Nous utilisons différentes API :
+1. Leaflet, permet de récupérer une carte.
+2. OpenWeather, permet de récupérer la météo sur une ville.
+3. Google AutoComplete, permet de récupérer une adresse à partir d'une recherche.
+4. Bière, permet de récupérer des bières et brasseries, api fait maison.
+
+Notre projet grâce à ces apis, nous permet de rechercher une ville aidés par une autocomplétion.<br>
+Cette recherche nous emmène sur une page où l'on peut voir la météo et l'heure actuelle du lieu recherché.<br>
+L'heure est calculée grâce à la timezone renvoyée par OpenWeather.
+En plus de ces fonctionnalités, les brasseries présentes dans un rayon de 20Km de la ville recherchée sont affichées sur la carte et dans la liste.<br>
+Un survol de la souris sur les brasseries permet d'afficher une pop-up contenant le nom de la brasserie.<br>
+Pour chaque brasserie il est possible d'accéder au site internet et au téléphone.<br>
+Il est possible de sélectionner une brasserie, cela permet d'apercevoir toutes les bières disponibles et de rejoindre le chat.
+
+Le projet intègre aussi un petit système de session très simple en faisant abstraction des contraintes de sécurité et d'optimisation, c'est à dire que le serveur fourni une session au client grâce à un identifiant mais sans authentification et ne gère pas les fin de session.<br>
+Ce petit système peut se voir côté client avec les couleurs de chat pour les utilisateurs, une couleur est propre à une session.
 
 ## Présentation de la structure côté serveur (M4105C - Technologie pour la production de logiciel)
 
@@ -106,7 +129,7 @@ sinon référez vous au paragraghe précédent.
     
 
 ###2. Partie Sockets
-
+Le client établie la connexion avec le serveur au chargement de l'index.html, 
 ## Présentation de la structure côté client (M4103C - Programmation web - client riche)
 
 

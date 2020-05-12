@@ -38,14 +38,8 @@ database
     });
 
 io.on("connection", (socket) => {
-    socket.on("getSession", (id) => {
-        const userData = server.getData()[id];
-        console.log(userData);
-        LogServeur("Id Connected "+id);
-        socket.emit("setSession", userData);
-    });
     socket.on("joinChat", (data) => {
-        console.log("Join ",data)
+        console.log("Join ",data);
         const userData = server.getData()[data.id];
         const actualUserRoom = userData.room;
         if (actualUserRoom) {
@@ -57,7 +51,7 @@ io.on("connection", (socket) => {
         }
 
         joinChat(socket, userData, data);
-    })
+    });
     socket.on("sendMessage", (data) => {
         console.log("Message ",data)
         const userData = server.getData()[data.id];
