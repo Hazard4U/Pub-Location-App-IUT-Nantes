@@ -132,14 +132,17 @@ Ce petit système peut se voir côté client avec les couleurs de chat pour les 
     
     ***success answer code*** (rayon de 5000m sur Londres) : [{"id":563,"breweries":"Fuller, Smith & Turner PBC","address1":"Chiswick Lane South","address2":"","city":"London","state":"London","code":"","country":"United Kingdom","phone":"44-(0208)-996-2000","website":"http://www.fullers.co.uk/","filepath":"","descript":"","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"51.4877,-0.2498"},{"id":1385,"breweries":"Youngs & Company Brewery","address1":"26 Osiers Road","address2":"Wandsworth","city":"London","state":"","code":"SW18 1NH","country":"England","phone":"020 8875 7000","website":"http://www.youngs.co.uk","filepath":"","descript":"","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"51.4611,-0.1966"}]
     
-- ### API webRoutes
+- #### API webRoutes
     
     |  Methode  |            URL          | Description                   |
     |:----------|:------------------------| :-----------------------------|
     | GET       | /api/webRoutes/         | Fournit le fichier index.html |
     |           | /api/webRoutes/login?search=`{adresse}`      | Renvoie les données de connexion cliente après avoir précisé une ville à la place de la variable {adresse} |
     
-
+    
+ - #### Test des routes
+ Comme demandé, un fichier `test.sh` est à disposition afin de pouvoir tester les routes sur l'API.
+   
 ###2. Partie Sockets
 Le client établit la connexion avec le serveur au chargement de l'index.html, 
 
