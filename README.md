@@ -129,7 +129,15 @@ Ce petit système peut se voir côté client avec les couleurs de chat pour les 
     
 
 ###2. Partie Sockets
-Le client établie la connexion avec le serveur au chargement de l'index.html, 
+Le client établie la connexion avec le serveur au chargement de l'index.html.<br>
+Lorsque le client sélectionne une brasserie il déclenche l'évènement: "joinChat", intercepté par le serveur qui le fait rejoindre une room.<br>
+Lorsque le client envoie un message il déclenche l'évènement: "sendMessage", intercepté par le serveur qui récupère grâce au cookie la session de l'utilisateur et ainsi la room et envoie à tous les utilisateurs de cette room le message via l'évènement "sendMessage".<br>
+Lorsque le client intercepte l'évènement "sendMessage", il affiche le message.<br>
+
 ## Présentation de la structure côté client (M4103C - Programmation web - client riche)
 
+Pour la structure côté client il s'agit d'un modèle MVVC à travers Vue.js et le Two-way-binding. Le projet à un fichier HTML, index.html.
+Ce fichier intègre Vue et son composant routeur, qui permet d'afficher deux vues différentes, représentées comme composant Home.js et Main.js.
+Ces deux composants sont chargés d'afficher leurs pages respectives et ont un modèle et une vue qui leur est propre.
 
+Dans static, on retrouve tous les fichiers qui sont disponibles pour le client, dans components les composants, dans js, les scripts clients.
