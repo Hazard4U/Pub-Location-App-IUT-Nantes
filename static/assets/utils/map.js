@@ -1,6 +1,6 @@
 //Variables globales
 let _MAP = undefined;
-
+let markers = [];
 // pos = [lat,lon]
 function addBreweryPointOnMap(brewery, breweryClickCallBack) {
     const pos = brewery.coordinates.split(',');
@@ -17,6 +17,8 @@ function addBreweryPointOnMap(brewery, breweryClickCallBack) {
         breweryClickCallBack(brewery);
         console.log("Brasserie",event);
     });
+    markers.push(marker);
+    updateZoom(markers);
     marker.on('mouseover', (event) => {
         addPopUpBrewery(brewery,marker);
         console.log("Brasserie",event);
@@ -28,14 +30,15 @@ function addPopUpBrewery(brewery,marker){
     marker.bindPopup(brewery.breweries).openPopup();
     const popup = marker.getPopup();
 
+
     marker.on('mouseleave', (event) => {
-        console.log("loged")
         popup.remove();
     });
 }
 // Fonction qui permettait d'afficher un message d'un utilisateur sur la map
 function addMessageOnMap(data) {
     L.marker(data.pos).addTo(_MAP);
+
     const popup = L.popup({autoClose: false, offset: [0, -14]})
         .setLatLng(data.pos)
         .setContent(`Nouveau message de <b>${data.username}</b>`)
@@ -63,13 +66,13 @@ function removeMessageOnMap(data) {
     updateMessage();
 }
 
-function updateMessageOnMap() {
-    const popups = messages.map((message) => message.popup);
-    const group = new L.featureGroup(popups);
+function updateZoom(array) {
+    const group = new L.featureGroup(array);
     _MAP.fitBounds(group.getBounds());
 }
 
 const initMap = (coord) => {
+    markers = [];
     _MAP = L.map('mapid').setView([coord.lat, coord.lon], 10);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/%22%3EOpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/%22%3ECC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/%22%3EMapbox</a>',
