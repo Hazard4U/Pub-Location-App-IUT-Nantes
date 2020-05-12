@@ -78,8 +78,9 @@ Puis connectez-vous sur `http://localhost:3000/` sous réserve que vous ayez lai
 sinon référez vous au paragraghe précédent.
 
 
-### Présentation de la structure (m)
+## Présentation de la structure côté serveur (M4105C - Technologie pour la production de logiciel)
 
+### 1. Requêter l'API
 - #### API beerRoutes
     
     |  Methode  |          URL             | Description                                               |
@@ -104,6 +105,8 @@ sinon référez vous au paragraghe précédent.
     |           | /api/webRoutes/login?search=`{adresse}`      | Renvoie les données de connexion cliente après avoir précisé une ville à la place de la variable {adresse} |
     
 
+###2. Partie Sockets
 
+## Présentation de la structure côté client (M4103C - Programmation web - client riche)
 
 
