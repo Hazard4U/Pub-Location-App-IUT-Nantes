@@ -46,7 +46,7 @@ Si vous avez besoin de mettre à jour `npm`, vous pouvez le faire en utilisant `
 - ### Projet
 
 ```shell script
-    $ git clone https://gitlab.com/Hazard4U/beeriut.git
+    $ unzip projet_JS_Deldicque_Martel.zip
     $ cd beerIUT
     $ npm install
 ```
@@ -90,7 +90,7 @@ Nous utilisons différentes API :
 3. Google AutoComplete, permet de récupérer une adresse à partir d'une recherche.
 4. Bière, permet de récupérer des bières et brasseries, api fait maison.
 
-Notre projet grâce à ces apis, nous permet de rechercher une ville aidés par une autocomplétion.<br>
+Notre projet grâce à ces apis, nous permet de rechercher une ville aidé par une autocomplétion.<br>
 Cette recherche nous emmène sur une page où l'on peut voir la météo et l'heure actuelle du lieu recherché.<br>
 L'heure est calculée grâce à la timezone renvoyée par OpenWeather.
 En plus de ces fonctionnalités, les brasseries présentes dans un rayon de 20Km de la ville recherchée sont affichées sur la carte et dans la liste.<br>
@@ -101,9 +101,9 @@ Il est possible de sélectionner une brasserie, cela permet d'apercevoir toutes 
 Le projet intègre aussi un petit système de session très simple en faisant abstraction des contraintes de sécurité et d'optimisation, c'est à dire que le serveur fourni une session au client grâce à un identifiant mais sans authentification et ne gère pas les fin de session.<br>
 Ce petit système peut se voir côté client avec les couleurs de chat pour les utilisateurs, une couleur est propre à une session.
 
-## Présentation de la structure côté serveur (M4105C - Technologie pour la production de logiciel)
+## Présentation de la structure côté serveur ![m4105c](https://img.shields.io/badge/Serveur-m4105c-green)
 
-### 1. Requêter l'API
+### 1. Requêter l'API (celles nous étant utiles sur le projet - descriptif complet dans le fichier `test.sh`)
 - #### API beerRoutes
     
     |  Methode  |          URL             | Description                                               |
@@ -119,7 +119,11 @@ Ce petit système peut se voir côté client avec les couleurs de chat pour les 
     | GET       | /api/breweryRoutes/         | Récupérer toutes les brasseries |
     |           | /api/breweryRoutes/:id      | Récupérer une brasserie par identifiant unique |
     |           | /api/beerRoutes/near?lat=`{lat}`&long=`{long}`&radius=`{radius}` | Récupérer les brasseries présentes dans un rayon défini avec {lat} ==> la latitude, {long} ==> la longitude et {rad} ==> le rayon désiré |
-
+    
+    **error answer code** : {"errorCode":21,"message":"Entity not found"}
+    
+    **success answer code** : {"id":100,"breweries":"Bell's Brewery Inc.","address1":"8938 Krum Ave.","address2":"","city":"Galesburg","state":"Michigan","code":"49053","country":"United States","phone":"269.382.2338","website":"...","filepath":"","descript":"In ...","last_mod":"2010-07-22T22:00:20+02:00","coordinates":"42.2843,-85.4538"}
+    
 - ### API webRoutes
     
     |  Methode  |            URL          | Description                   |
@@ -129,7 +133,7 @@ Ce petit système peut se voir côté client avec les couleurs de chat pour les 
     
 
 ###2. Partie Sockets
-Le client établie la connexion avec le serveur au chargement de l'index.html.<br>
+Le client établit la connexion avec le serveur au chargement de l'index.html.<br>
 Lorsque le client sélectionne une brasserie il déclenche l'évènement: "joinChat", intercepté par le serveur qui le fait rejoindre une room.<br>
 Lorsque le client envoie un message il déclenche l'évènement: "sendMessage", intercepté par le serveur qui récupère grâce au cookie la session de l'utilisateur et ainsi la room et envoie à tous les utilisateurs de cette room le message via l'évènement "sendMessage".<br>
 Lorsque le client intercepte l'évènement "sendMessage", il affiche le message.<br>
